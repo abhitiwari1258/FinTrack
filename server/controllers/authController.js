@@ -72,10 +72,10 @@ export const loginUser = async (req, res) => {
                 message: "Invalid credentials",
             });
         }
-// jwt.sign(payload, secretKey, options);
-// A JWT has 3 parts:
+        // jwt.sign(payload, secretKey, options);
+        // A JWT has 3 parts:
 
-// header.payload.signature
+        // header.payload.signature
 
         // generate token
         const token = jwt.sign(
@@ -93,6 +93,22 @@ export const loginUser = async (req, res) => {
                 email: user.email,
             },
         })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+}
+
+export const getCurrentUser = async (req, res) => {
+    try {
+        const userId = req.user.userId
+        console.log(userId)
+
+        const user = await User.findById(userId).select("-password");
+        console.log(user)
+
+        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({
             message: error.message,
