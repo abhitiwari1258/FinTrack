@@ -29,3 +29,20 @@ export const createTransaction = async (req, res) => {
         });
     }
 }
+
+export const getTransactions = async (req, res) => {
+    try {
+        const transaction = await Transaction.find({
+            user: req.user.userId,
+        }).sort({ date: -1 })
+
+        res.status(200).json({
+            count: transaction.length,
+            transaction
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+}
