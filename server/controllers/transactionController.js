@@ -85,3 +85,32 @@ export const updateTransaction = async (req, res) => {
         });
     }
 }
+
+export const deleteTransaction = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const transaction = await Transaction.findById(id)
+
+        if (!transaction) {
+            return res.status(404).json({
+                message: "Transaction not found.",
+            });
+        }
+
+        if (transaction.user.toString() !== req.user.userId) {
+            return res.status(403).json({
+                message: "You are not authorized to delete this transaction.",
+            });
+        }
+
+        await transaction.deleteOne();
+        res.status(200).json({
+            message: "Transaction deleted successfully.",
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+}
